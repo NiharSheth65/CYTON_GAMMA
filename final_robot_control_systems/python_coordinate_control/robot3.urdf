@@ -1,0 +1,126 @@
+<robot name="robot_arm">
+    <!-- Fixed Base Cylinder -->
+    <link name="base_link">
+        <visual>
+            <origin xyz="0 0 0.037" rpy="0 0 0"/>
+            <geometry>
+                <cylinder length="0.074" radius="0.075"/>
+            </geometry>
+        </visual>
+    </link>
+
+    <!-- Rotating Base Box -->
+    <link name="base_rot">
+        <visual>
+            <origin xyz="0 0 0.05175" rpy="0 0 0"/> <!-- Adjusted origin to sit on top of the base cylinder -->
+            <geometry>
+                <box size="0.05 0.05 0.1035"/>
+            </geometry>
+            <material name="green">
+                <color rgba="1.0 0.0 0.0 1.0"/>
+            </material>
+        </visual>
+    </link>
+
+    <!-- Arm 1 Link (BASE-SHOULDER)-->
+    <link name="arm1">
+        <visual>
+            <origin xyz="0 0 0.119" rpy="0 0 0"/>
+            <geometry>
+                <cylinder length="0.238" radius="0.022"/>
+            </geometry>
+        </visual>
+    </link>
+
+    <!-- Arm 2 Link (SHOULDER - ELBOW)-->
+    <link name="arm2">
+        <visual>
+            <origin xyz="0 0 0.075" rpy="0 0 0"/>
+            <geometry>
+                <cylinder length="0.150" radius="0.0175"/>
+            </geometry>
+        </visual>
+    </link>
+
+    <!-- Arm 3 Link (ELBOW - WRIST)-->
+    <link name="tilt">
+        <visual>
+            <origin xyz="0 0 0.0225" rpy="0 0 0"/>
+            <geometry>
+                <cylinder length="0.170" radius="0.015"/>
+            </geometry>
+            <material name="blue">
+                <color rgba="0.0 0.0 1.0 1.0"/>
+            </material>
+        </visual>
+    </link>
+
+
+    <!-- Arm 3 Link (ELBOW - WRIST)-->
+    <link name="final">
+        <visual>
+            <origin xyz="0 0 0.0225" rpy="1.75 0 0"/>
+            <geometry>
+                <cylinder length="0.170" radius="0.015"/>
+            </geometry>
+            <material name="blue">
+                <color rgba="0.0 0.0 1.0 1.0"/>
+            </material>
+        </visual>
+    </link>
+
+
+    <!-- Base Joint (Fixed) -->
+    <joint name="base_joint" type="fixed">
+        <parent link="world"/> <!-- Assuming the base link is fixed to the world -->
+        <child link="base_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <!-- Rotating Joint on Top of Base -->
+    <joint name="base_rot_joint" type="revolute">
+        <parent link="base_link"/>
+        <child link="base_rot"/>
+        <origin xyz="0 0 0.074" rpy="0 0 0"/> <!-- Origin set to the top of the base cylinder -->
+        <axis xyz="0 0 1"/>
+        <limit lower="-3.14" upper="3.14"/> <!-- Full rotation allowed -->
+    </joint>
+
+    <!-- Shoulder Joint -->
+    <joint name="shoulder_joint" type="revolute">
+        <parent link="base_rot"/>
+        <child link="arm1"/>
+        <origin xyz="0 0 0.1035" rpy="0 0 0"/> <!-- Adjusted to the top of the rotating box -->
+        <axis xyz="1 0 0"/>
+        <limit lower="-1.74" upper="1.74"/>
+    </joint>
+
+    <!-- Elbow Joint -->
+    <joint name="elbow_joint" type="revolute">
+        <parent link="arm1"/>
+        <child link="arm2"/>
+        <origin xyz="0 0 0.238" rpy="0 0 0"/>
+        <axis xyz="1 0 0"/>
+        <limit lower="-1.75" upper="1.75"/>
+    </joint>
+
+    <!-- Rot Joint -->
+    <joint name="rot_joint" type="revolute">
+        <parent link="arm2"/>
+        <child link="tilt"/>
+        <origin xyz="0 0 0.15" rpy="0 0 0"/>
+        <axis xyz="1 0 0"/>
+        <limit lower="-2" upper="2"/>
+    </joint>
+
+      <!-- Rot Joint -->
+    <joint name="final_joint" type="revolute">
+        <parent link="tilt"/>
+        <child link="final"/>
+        <origin xyz="0 0 0.15" rpy="0 0 0"/>
+        <axis xyz="1 0 0"/>
+        <limit lower="-1.57" upper="1.57"/>
+    </joint>
+
+
+</robot>
